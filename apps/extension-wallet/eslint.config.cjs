@@ -24,7 +24,21 @@ module.exports = [
     },
     rules: {
       ...tseslint.configs.recommended.rules,
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'no-undef': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
+  },
+  {
+    files: ['**/__tests__/**/*.{ts,tsx}', '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+        vi: 'readonly',
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
   {

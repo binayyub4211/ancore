@@ -204,6 +204,9 @@ export class SecureStorageManager {
     const salt = globalThis.crypto.getRandomValues(new Uint8Array(16));
     const iv = globalThis.crypto.getRandomValues(new Uint8Array(12));
     
+    const salt = globalThis.crypto.getRandomValues(new Uint8Array(16) as any);
+    const iv = globalThis.crypto.getRandomValues(new Uint8Array(12) as any);
+
     const aesKey = await this.deriveAesKey(salt);
     const encoder = new TextEncoder();
 
@@ -216,7 +219,7 @@ export class SecureStorageManager {
     return {
       salt: bufferToBase64(salt),
       iv: bufferToBase64(iv),
-      data: bufferToBase64(ciphertext)
+      data: bufferToBase64(ciphertext),
     };
   }
 
@@ -245,7 +248,7 @@ export class SecureStorageManager {
   }
 
   public async getAccount(): Promise<AccountData | null> {
-    const payload = await this.storage.get('account') as EncryptedPayload | null;
+    const payload = (await this.storage.get('account')) as EncryptedPayload | null;
     if (!payload) return null;
     const json = await this.decryptData(payload);
     return JSON.parse(json);
@@ -257,7 +260,7 @@ export class SecureStorageManager {
   }
 
   public async getSessionKeys(): Promise<SessionKeysData | null> {
-    const payload = await this.storage.get('sessionKeys') as EncryptedPayload | null;
+    const payload = (await this.storage.get('sessionKeys')) as EncryptedPayload | null;
     if (!payload) return null;
     const json = await this.decryptData(payload);
     return JSON.parse(json);

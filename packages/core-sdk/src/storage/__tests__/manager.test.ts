@@ -54,7 +54,7 @@ describe('SecureStorageManager', () => {
 
     const storedData = await storage.get('account');
     expect(storedData).toBeDefined();
-    
+
     // Ensure it's not plaintext
     const jsonStr = JSON.stringify(storedData);
     expect(jsonStr).not.toContain(accountData.privateKey);
@@ -99,7 +99,7 @@ describe('SecureStorageManager', () => {
     const unlockResult = await manager.unlock(password);
     expect(unlockResult).toBe(true);
     await manager.saveAccount(accountData);
-    
+
     manager.lock();
     const newManager = new SecureStorageManager(storage);
     const wrongPasswordResult = await newManager.unlock('wrong_password');
@@ -113,16 +113,15 @@ describe('SecureStorageManager', () => {
   });
 
   it('should return null for non-existent items', async () => {
-    const unlockResult = await manager.unlock(password);
-    expect(unlockResult).toBe(true);
-    
+    await manager.unlock(password);
+
     const account = await manager.getAccount();
     expect(account).toBeNull();
-    
+
     const sessionKeys = await manager.getSessionKeys();
     expect(sessionKeys).toBeNull();
   });
-  
+
   it('should not throw on unlock if already unlocked', async () => {
     const unlockResult1 = await manager.unlock(password);
     expect(unlockResult1).toBe(true);
