@@ -1,10 +1,12 @@
 import { Buffer } from 'node:buffer';
 
 const PBKDF2_ITERATIONS = 100000;
+const MAX_PBKDF2_ITERATIONS = 600000;
 const SALT_LENGTH = 16;
 const IV_LENGTH = 12;
 const AES_KEY_LENGTH = 256;
 const VERSION = 1;
+const DECRYPT_FAILURE_MESSAGE = 'Invalid password or corrupted encrypted payload.';
 
 export interface EncryptedSecretKeyPayload {
   version: number;
@@ -69,6 +71,46 @@ function validateInputs(secretKey: string, password: string): void {
   }
 }
 
+function validateEncryptedPayload(payload: unknown): EncryptedSecretKeyPayload {
+  if (!payload || typeof payload !== 'object') {
+    throw new Error(DECRYPT_FAILURE_MESSAGE);
+  }
+
+  const record = payload as Record<string, unknown>;
+
+  if (record.version !== VERSION) {
+    throw new Error(DECRYPT_FAILURE_MESSAGE);
+  }
+
+  if (typeof record.salt !== 'string' || record.salt.length === 0) {
+    throw new Error(DECRYPT_FAILURE_MESSAGE);
+  }
+
+  if (typeof record.iv !== 'string' || record.iv.length === 0) {
+    throw new Error(DECRYPT_FAILURE_MESSAGE);
+  }
+
+  if (typeof record.ciphertext !== 'string' || record.ciphertext.length === 0) {
+    throw new Error(DECRYPT_FAILURE_MESSAGE);
+  }
+
+  if (
+    !Number.isSafeInteger(record.iterations) ||
+    (record.iterations as number) < PBKDF2_ITERATIONS ||
+    (record.iterations as number) > MAX_PBKDF2_ITERATIONS
+  ) {
+    throw new Error(DECRYPT_FAILURE_MESSAGE);
+  }
+
+  return {
+    version: record.version as number,
+    iterations: record.iterations as number,
+    salt: record.salt,
+    iv: record.iv,
+    ciphertext: record.ciphertext,
+  };
+}
+
 /**
  * Encrypts a secret key using a password-derived AES-256-GCM key.
  *
@@ -110,27 +152,22 @@ export async function decryptSecretKey(
   payload: EncryptedSecretKeyPayload,
   password: string
 ): Promise<string> {
-  if (!payload || typeof payload !== 'object') {
-    throw new Error('payload must be a valid encrypted secret key object.');
-  }
-
   if (typeof password !== 'string' || password.length === 0) {
     throw new Error('password must be a non-empty string.');
   }
 
-  const cryptoApi = getCrypto();
-  const iterations =
-    typeof payload.iterations === 'number' && payload.iterations >= PBKDF2_ITERATIONS
-      ? payload.iterations
-      : PBKDF2_ITERATIONS;
-
-  const salt = fromBase64(payload.salt);
-  const iv = fromBase64(payload.iv);
-  const ciphertext = fromBase64(payload.ciphertext);
-
-  const encryptionKey = await deriveEncryptionKey(password, salt, iterations);
-
   try {
+    const validatedPayload = validateEncryptedPayload(payload);
+    const cryptoApi = getCrypto();
+    const salt = fromBase64(validatedPayload.salt);
+    const iv = fromBase64(validatedPayload.iv);
+    const ciphertext = fromBase64(validatedPayload.ciphertext);
+    const encryptionKey = await deriveEncryptionKey(
+      password,
+      salt,
+      validatedPayload.iterations
+    );
+
     const plaintext = await cryptoApi.subtle.decrypt(
       {
         name: 'AES-GCM',
@@ -142,6 +179,6 @@ export async function decryptSecretKey(
 
     return new TextDecoder().decode(plaintext);
   } catch {
-    throw new Error('Invalid password or corrupted encrypted payload.');
+    throw new Error(DECRYPT_FAILURE_MESSAGE);
   }
 }
