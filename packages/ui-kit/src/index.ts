@@ -67,8 +67,9 @@ export type { PasswordStrength } from './components/Form/validation';
 // Toast / Notifications
 export { Toast } from './components/Toast/Toast';
 export type { ToastProps } from './components/Toast/Toast';
+export { ToastContainer } from './components/Toast/ToastContainer';
 export { NotificationProvider } from './components/Toast/NotificationProvider';
-export type { Toast as ToastItem, ToastVariant } from './components/Toast/NotificationProvider';
+export type { ToastItem, ToastVariant } from './components/Toast/NotificationProvider';
 export { useToast } from './components/Toast/useToast';
 
 // Utility functions
