@@ -102,6 +102,63 @@ fn get_session_key(env: Env, public_key: BytesN<32>) -> Option<SessionKey>
 
 Manage session keys for the account.
 
+## Contract Errors
+
+The contract uses structured error codes to provide clear feedback for failure conditions. These error codes are essential for SDK and frontend error handling.
+
+### Error Code Reference
+
+| Error Code | Variant | Description |
+|------------|---------|-------------|
+| 1 | `AlreadyInitialized` | Account is already initialized |
+| 2 | `NotInitialized` | Account is not initialized |
+| 3 | `Unauthorized` | Caller is not authorized |
+| 4 | `InvalidNonce` | Invalid nonce provided |
+| 5 | `SessionKeyNotFound` | Session key not found |
+| 6 | `SessionKeyExpired` | Session key has expired |
+| 7 | `InsufficientPermission` | Insufficient permissions |
+| 8 | `InvalidVersion` | Invalid version provided for migration |
+
+### Error Handling Examples
+
+#### SDK Integration
+```rust
+match contract_result {
+    Ok(result) => handle_success(result),
+    Err(ContractError::InvalidNonce) => {
+        // Handle nonce mismatch - refresh nonce and retry
+    },
+    Err(ContractError::SessionKeyExpired) => {
+        // Handle expired session key - request new key
+    },
+    Err(error) => {
+        // Handle other errors
+        eprintln!("Contract error: {:?}", error);
+    }
+}
+```
+
+#### Frontend Integration
+```javascript
+try {
+    await contract.execute(params);
+} catch (error) {
+    switch (error.code) {
+        case 4: // InvalidNonce
+            showNonceError();
+            break;
+        case 6: // SessionKeyExpired
+            showSessionKeyExpiredError();
+            break;
+        case 7: // InsufficientPermission
+            showPermissionError();
+            break;
+        default:
+            showGenericError(error.message);
+    }
+}
+```
+
 ## Development
 
 ### Prerequisites

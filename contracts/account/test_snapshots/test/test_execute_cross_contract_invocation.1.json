@@ -1,6 +1,6 @@
 {
   "generators": {
-    "address": 2,
+    "address": 3,
     "nonce": 0
   },
   "auth": [
@@ -15,13 +15,17 @@
               "function_name": "add_session_key",
               "args": [
                 {
-                  "bytes": "0101010101010101010101010101010101010101010101010101010101010101"
+                  "bytes": "679802846dcb16a6e1716a25fcb435274f65fb52f642931b8cfa571a5eb7c3f5"
                 },
                 {
                   "u64": 10000
                 },
                 {
-                  "vec": []
+                  "vec": [
+                    {
+                      "u32": 1
+                    }
+                  ]
                 }
               ]
             }
@@ -30,7 +34,6 @@
         }
       ]
     ],
-    [],
     []
   ],
   "ledger": {
@@ -53,7 +56,7 @@
                   "symbol": "SessionKey"
                 },
                 {
-                  "bytes": "0101010101010101010101010101010101010101010101010101010101010101"
+                  "bytes": "679802846dcb16a6e1716a25fcb435274f65fb52f642931b8cfa571a5eb7c3f5"
                 }
               ]
             },
@@ -73,7 +76,7 @@
                       "symbol": "SessionKey"
                     },
                     {
-                      "bytes": "0101010101010101010101010101010101010101010101010101010101010101"
+                      "bytes": "679802846dcb16a6e1716a25fcb435274f65fb52f642931b8cfa571a5eb7c3f5"
                     }
                   ]
                 },
@@ -93,7 +96,11 @@
                         "symbol": "permissions"
                       },
                       "val": {
-                        "vec": []
+                        "vec": [
+                          {
+                            "u32": 1
+                          }
+                        ]
                       }
                     },
                     {
@@ -101,7 +108,7 @@
                         "symbol": "public_key"
                       },
                       "val": {
-                        "bytes": "0101010101010101010101010101010101010101010101010101010101010101"
+                        "bytes": "679802846dcb16a6e1716a25fcb435274f65fb52f642931b8cfa571a5eb7c3f5"
                       }
                     }
                   ]
@@ -145,7 +152,7 @@
                           ]
                         },
                         "val": {
-                          "u64": 0
+                          "u64": 1
                         }
                       },
                       {
@@ -213,6 +220,38 @@
             "ext": "v0"
           },
           6311999
+        ]
+      ],
+      [
+        {
+          "contract_data": {
+            "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M",
+            "key": "ledger_key_contract_instance",
+            "durability": "persistent"
+          }
+        },
+        [
+          {
+            "last_modified_ledger_seq": 0,
+            "data": {
+              "contract_data": {
+                "ext": "v0",
+                "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M",
+                "key": "ledger_key_contract_instance",
+                "durability": "persistent",
+                "val": {
+                  "contract_instance": {
+                    "executable": {
+                      "wasm": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                    },
+                    "storage": null
+                  }
+                }
+              }
+            },
+            "ext": "v0"
+          },
+          4095
         ]
       ],
       [
@@ -327,13 +366,17 @@
             "data": {
               "vec": [
                 {
-                  "bytes": "0101010101010101010101010101010101010101010101010101010101010101"
+                  "bytes": "679802846dcb16a6e1716a25fcb435274f65fb52f642931b8cfa571a5eb7c3f5"
                 },
                 {
                   "u64": 10000
                 },
                 {
-                  "vec": []
+                  "vec": [
+                    {
+                      "u32": 1
+                    }
+                  ]
                 }
               ]
             }
@@ -357,7 +400,7 @@
             "data": {
               "vec": [
                 {
-                  "bytes": "0101010101010101010101010101010101010101010101010101010101010101"
+                  "bytes": "679802846dcb16a6e1716a25fcb435274f65fb52f642931b8cfa571a5eb7c3f5"
                 },
                 {
                   "u64": 10000
@@ -405,11 +448,73 @@
                 "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
               },
               {
-                "symbol": "refresh_session_key_ttl"
+                "symbol": "execute"
               }
             ],
             "data": {
-              "bytes": "0101010101010101010101010101010101010101010101010101010101010101"
+              "vec": [
+                {
+                  "vec": [
+                    {
+                      "symbol": "SessionKey"
+                    },
+                    {
+                      "bytes": "679802846dcb16a6e1716a25fcb435274f65fb52f642931b8cfa571a5eb7c3f5"
+                    }
+                  ]
+                },
+                {
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
+                },
+                {
+                  "symbol": "get_nonce"
+                },
+                {
+                  "vec": []
+                },
+                {
+                  "u64": 0
+                },
+                {
+                  "bytes": "679802846dcb16a6e1716a25fcb435274f65fb52f642931b8cfa571a5eb7c3f5"
+                },
+                {
+                  "bytes": "de3f5fdbf6f4ce7018e4b6c9ca961f43f540b4ed949825fc19f07f53f7c9860a71a97d7b51ce768f435bede9f6d318d63b0ded62a57a34717db0ed17bd1faf06"
+                },
+                {
+                  "bytes": "000000120000000100000000000000000000000000000000000000000000000000000000000000030000000f000000096765745f6e6f6e6365000000000000100000000100000000000000050000000000000000"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "failed_call": false
+    },
+    {
+      "event": {
+        "ext": "v0",
+        "contract_id": "0000000000000000000000000000000000000000000000000000000000000001",
+        "type_": "contract",
+        "body": {
+          "v0": {
+            "topics": [
+              {
+                "symbol": "executed"
+              }
+            ],
+            "data": {
+              "vec": [
+                {
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
+                },
+                {
+                  "symbol": "get_nonce"
+                },
+                {
+                  "u64": 0
+                }
+              ]
             }
           }
         }
@@ -425,10 +530,13 @@
           "v0": {
             "topics": [
               {
-                "symbol": "fn_return"
+                "symbol": "fn_call"
               },
               {
-                "symbol": "refresh_session_key_ttl"
+                "bytes": "0000000000000000000000000000000000000000000000000000000000000003"
+              },
+              {
+                "symbol": "get_nonce"
               }
             ],
             "data": "void"
@@ -440,23 +548,20 @@
     {
       "event": {
         "ext": "v0",
-        "contract_id": null,
+        "contract_id": "0000000000000000000000000000000000000000000000000000000000000003",
         "type_": "diagnostic",
         "body": {
           "v0": {
             "topics": [
               {
-                "symbol": "fn_call"
+                "symbol": "fn_return"
               },
               {
-                "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
-              },
-              {
-                "symbol": "get_session_key"
+                "symbol": "get_nonce"
               }
             ],
             "data": {
-              "bytes": "0101010101010101010101010101010101010101010101010101010101010101"
+              "u64": 0
             }
           }
         }
@@ -475,36 +580,11 @@
                 "symbol": "fn_return"
               },
               {
-                "symbol": "get_session_key"
+                "symbol": "execute"
               }
             ],
             "data": {
-              "map": [
-                {
-                  "key": {
-                    "symbol": "expires_at"
-                  },
-                  "val": {
-                    "u64": 10000
-                  }
-                },
-                {
-                  "key": {
-                    "symbol": "permissions"
-                  },
-                  "val": {
-                    "vec": []
-                  }
-                },
-                {
-                  "key": {
-                    "symbol": "public_key"
-                  },
-                  "val": {
-                    "bytes": "0101010101010101010101010101010101010101010101010101010101010101"
-                  }
-                }
-              ]
+              "u64": 0
             }
           }
         }
