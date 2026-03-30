@@ -12,6 +12,7 @@
     "analyze": "node scripts/analyze-bundle.js"
   },
   "dependencies": {
+    "@ancore/account-abstraction": "workspace:*",
     "@ancore/core-sdk": "workspace:*",
     "@ancore/stellar": "workspace:*",
     "@ancore/types": "workspace:*",

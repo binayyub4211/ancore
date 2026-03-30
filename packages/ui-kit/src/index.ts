@@ -26,6 +26,9 @@ export type { BadgeProps } from './components/ui/badge';
 
 export { Separator } from './components/ui/separator';
 
+export { Dialog } from './components/ui/dialog';
+export { Tooltip } from './components/ui/tooltip';
+
 // Custom wallet components
 export { AmountInput } from './components/amount-input';
 export type { AmountInputProps } from './components/amount-input';
