@@ -1,50 +1,51 @@
-import { useMemo } from 'react';
-import { getAccountState, initializeAccountStore, useAccountStore } from '../stores/account';
-import { setSessionState, useSessionStore, type AppRoute } from '../stores/session';
-import { initializeSettingsStore, useSettingsStore } from '../stores/settings';
+import { Suspense, lazy } from 'react';
+import { useAccountStore } from '../stores/account';
+import { useSessionStore, type AppRoute } from '../stores/session';
+import { useSettingsStore } from '../stores/settings';
 
-const routes: Array<{ id: AppRoute; label: string; description: string }> = [
-  {
-    id: 'home',
-    label: 'Home',
-    description: 'Wallet overview, balances, and quick actions will land here.',
-  },
-  {
-    id: 'accounts',
-    label: 'Accounts',
-    description: 'Account selection, creation, and import flows will live here.',
-  },
-  {
-    id: 'settings',
-    label: 'Settings',
-    description: 'Network, theme, and extension preferences will live here.',
-  },
-];
+// 1. Dynamic Imports (Corrected paths from your build log)
+const HomeScreen = lazy(() => import('../screens/HomeScreen'));
+const ReceiveScreen = lazy(() => import('../screens/ReceiveScreen'));
+const UnlockScreen = lazy(() => import('../screens/UnlockScreen'));
+const TransactionDetail = lazy(() => import('../screens/TransactionDetail'));
 
-function navigate(route: AppRoute) {
-  setSessionState((current) => ({
-    ...current,
-    currentRoute: route,
-    lastActiveAt: Date.now(),
-  }));
-}
+// Folder-based components (pointing to the entry screens shown in your log)
+const OnboardingFlow = lazy(() => import('../screens/Onboarding/OnboardingFlow'));
+const SendScreen = lazy(() => import('../screens/Send/SendScreen'));
+const SettingsScreen = lazy(() =>
+  import('../screens/Settings/AboutScreen').then((m) => ({ default: m.AboutScreen }))
+);
 
 export function RouterShell(): JSX.Element {
-  initializeAccountStore();
-  initializeSettingsStore();
-
-  const account = useAccountStore();
+  const accounts = useAccountStore((s) => s.accounts);
+  const activeAccountId = useAccountStore((s) => s.activeAccountId);
   const session = useSessionStore();
   const settings = useSettingsStore();
 
-  const activeRoute = useMemo(
-    () => routes.find((route) => route.id === session.currentRoute) ?? routes[0],
-    [session.currentRoute]
-  );
+  const activeAccount = accounts.find((a) => a.id === activeAccountId);
 
-  const activeAccount = getAccountState().accounts.find(
-    (entry) => entry.id === account.activeAccountId
-  );
+  const routes: Array<{ id: AppRoute; label: string; description: string }> = [
+    { id: 'home', label: 'Home', description: 'Wallet overview and quick actions.' },
+    { id: 'accounts', label: 'Accounts', description: 'Account selection and import.' },
+    { id: 'settings', label: 'Settings', description: 'Network, theme, and preferences.' },
+  ];
+
+  const activeRoute = routes.find((r) => r.id === session.currentRoute) ?? routes[0];
+
+  // 2. Helper to render the lazy components based on session state
+  const renderActiveScreen = () => {
+    switch (session.currentRoute) {
+      case 'home':
+        return <HomeScreen />;
+      case 'settings':
+        return <SettingsScreen />;
+      case 'accounts':
+        // If there isn't a specific AccountsScreen yet, we fallback to Home
+        return <HomeScreen />;
+      default:
+        return <HomeScreen />;
+    }
+  };
 
   return (
     <div className="mx-auto flex min-h-screen w-[360px] flex-col bg-slate-950 text-slate-50">
@@ -62,12 +63,11 @@ export function RouterShell(): JSX.Element {
         <div className="mt-5 grid grid-cols-3 gap-2">
           {routes.map((route) => {
             const isActive = route.id === activeRoute.id;
-
             return (
               <button
                 key={route.id}
                 type="button"
-                onClick={() => navigate(route.id)}
+                onClick={() => session.navigate(route.id)}
                 className={[
                   'rounded-2xl px-3 py-2 text-sm transition',
                   isActive
@@ -94,8 +94,7 @@ export function RouterShell(): JSX.Element {
             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Wallet store</p>
             <div className="mt-3 space-y-2 text-sm text-slate-200">
               <p>Active account: {activeAccount?.label ?? 'No account selected'}</p>
-              <p>Known accounts: {account.accounts.length}</p>
-              <p>Hydrated: {account.hydrated ? 'yes' : 'no'}</p>
+              <p>Known accounts: {accounts.length}</p>
             </div>
           </article>
 
@@ -109,9 +108,16 @@ export function RouterShell(): JSX.Element {
           </article>
         </section>
 
+        {/* 3. Suspense Boundary for Lazy Loaded Screens */}
+        <Suspense
+          fallback={<div className="p-8 text-center text-cyan-400 animate-pulse">Loading...</div>}
+        >
+          {renderActiveScreen()}
+        </Suspense>
+
         <section className="rounded-3xl border border-dashed border-cyan-400/30 bg-cyan-400/5 p-4 text-sm leading-6 text-cyan-50/90">
-          This scaffold wires manifest, popup, background worker, navigation, and initial stores.
-          Feature-specific screens can now replace these placeholders incrementally.
+          Zustand stores wired with extension storage persistence. Auto-lock and session management
+          active.
         </section>
       </main>
     </div>
