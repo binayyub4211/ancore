@@ -114,6 +114,7 @@ const DAY_IN_LEDGERS: u32 = 17280; // 24 hours * 60 min * 60 sec / 5 sec per led
 const INSTANCE_BUMP_AMOUNT: u32 = 30 * DAY_IN_LEDGERS; // 30 days
 const INSTANCE_BUMP_THRESHOLD: u32 = 15 * DAY_IN_LEDGERS; // 15 days
 
+/// Permission bit for execute operations
 /// Permission bit for session-key execute authorization.
 /// Issue #188: Session keys must have this permission to invoke transactions.
 /// Without this bit set, execute() returns InsufficientPermission error.
@@ -164,7 +165,7 @@ impl AncoreAccount {
         env.storage().instance().get(&DataKey::Version).unwrap_or(0)
     }
 
-    /// Execute a transaction: validate nonce, perform cross-contract call, increment nonce.
+    /// Execute a transaction with nonce replay-protection and dual auth paths.
     ///
     /// # Security
     /// - Caller must be owner OR provide a valid session key signature
@@ -646,6 +647,7 @@ mod test {
         assert_eq!(event_pk, session_pk);
     }
 
+    /// Owner can execute; event is emitted with correct (to, function, nonce=0).
     #[test]
     fn test_execute_emits_event() {
         let env = Env::default();
@@ -701,6 +703,7 @@ mod test {
         client.initialize(&owner);
     }
 
+    /// Passing expected_nonce = 1 when current nonce is 0 must be rejected.
     #[test]
     #[should_panic(expected = "Error(Contract, #4)")]
     fn test_execute_rejects_invalid_nonce() {
@@ -715,7 +718,7 @@ mod test {
 
         let to = Address::generate(&env);
         let function = soroban_sdk::symbol_short!("transfer");
-        let args = Vec::new(&env);
+        let args: Vec<soroban_sdk::Val> = Vec::new(&env);
 
         // Current nonce is 0; passing expected_nonce = 1 must fail with InvalidNonce (#4)
         client.execute(
@@ -730,6 +733,7 @@ mod test {
         );
     }
 
+    /// Correct nonce is accepted and incremented to 1 afterward.
     #[test]
     fn test_execute_validates_nonce_then_increments() {
         let env = Env::default();
@@ -745,7 +749,7 @@ mod test {
 
         let callee_id = env.register_contract(None, AncoreAccount);
         let function = soroban_sdk::symbol_short!("get_nonce");
-        let args = Vec::new(&env);
+        let args: Vec<soroban_sdk::Val> = Vec::new(&env);
 
         let _result = client.execute(
             &CallerIdentity::Owner,

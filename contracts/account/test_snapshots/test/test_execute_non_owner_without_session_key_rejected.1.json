@@ -1,6 +1,6 @@
 {
   "generators": {
-    "address": 3,
+    "address": 4,
     "nonce": 0
   },
   "auth": [[], []],
@@ -60,18 +60,6 @@
                         "val": {
                           "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
                         }
-                      },
-                      {
-                        "key": {
-                          "vec": [
-                            {
-                              "symbol": "Version"
-                            }
-                          ]
-                        },
-                        "val": {
-                          "u32": 1
-                        }
                       }
                     ]
                   }
@@ -80,7 +68,7 @@
             },
             "ext": "v0"
           },
-          518400
+          4095
         ]
       ],
       [
@@ -101,7 +89,7 @@
             },
             "ext": "v0"
           },
-          518400
+          4095
         ]
       ]
     ]
@@ -195,14 +183,10 @@
             "data": {
               "vec": [
                 {
-                  "vec": [
-                    {
-                      "symbol": "Owner"
-                    }
-                  ]
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
                 },
                 {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
                 },
                 {
                   "symbol": "transfer"
@@ -212,11 +196,11 @@
                 },
                 "void",
                 {
-                  "u64": 1
+                  "u64": 0
                 },
-                "void",
-                "void",
-                "void"
+                {
+                  "u32": 0
+                }
               ]
             }
           }
@@ -241,7 +225,7 @@
             ],
             "data": {
               "error": {
-                "contract": 4
+                "contract": 5
               }
             }
           }
@@ -262,7 +246,7 @@
               },
               {
                 "error": {
-                  "contract": 4
+                  "contract": 5
                 }
               }
             ],
@@ -287,7 +271,7 @@
               },
               {
                 "error": {
-                  "contract": 4
+                  "contract": 5
                 }
               }
             ],
@@ -302,14 +286,10 @@
                 {
                   "vec": [
                     {
-                      "vec": [
-                        {
-                          "symbol": "Owner"
-                        }
-                      ]
+                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
                     },
                     {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
+                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
                     },
                     {
                       "symbol": "transfer"
@@ -319,11 +299,11 @@
                     },
                     "void",
                     {
-                      "u64": 1
+                      "u64": 0
                     },
-                    "void",
-                    "void",
-                    "void"
+                    {
+                      "u32": 0
+                    }
                   ]
                 }
               ]
@@ -346,7 +326,7 @@
               },
               {
                 "error": {
-                  "contract": 4
+                  "contract": 5
                 }
               }
             ],
