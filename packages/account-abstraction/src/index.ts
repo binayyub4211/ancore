@@ -25,9 +25,12 @@ export {
   InvalidNonceError,
   UnauthorizedError,
   SessionKeyNotFoundError,
+  SessionKeyExpiredError,
+  InsufficientPermissionError,
   ContractInvocationError,
   mapContractError,
   CONTRACT_ERROR_MESSAGES,
+  CONTRACT_ERROR_CODES,
 } from './errors';
 
 export {
