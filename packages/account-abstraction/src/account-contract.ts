@@ -84,9 +84,9 @@ export class AccountContract {
    * The signature payload is computed on-chain, so no signature_payload parameter is needed.
    */
   execute(
-    to: string, 
-    fn: string, 
-    args: xdr.ScVal[], 
+    to: string,
+    fn: string,
+    args: xdr.ScVal[],
     expectedNonce: number,
     sessionPubKey?: string | Uint8Array,
     signature?: string | Uint8Array
@@ -106,8 +106,9 @@ export class AccountContract {
     }
 
     if (signature !== undefined) {
-      executeArgs.push(xdr.ScVal.scvBytes(signature instanceof Uint8Array ? signature : 
-        Buffer.from(signature, 'base64')));
+      const signatureBytes: Buffer =
+        signature instanceof Uint8Array ? Buffer.from(signature) : Buffer.from(signature, 'base64');
+      executeArgs.push(xdr.ScVal.scvBytes(signatureBytes));
     } else {
       executeArgs.push(xdr.ScVal.scvVoid());
     }

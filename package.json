@@ -17,12 +17,17 @@
     "dev": "turbo run dev",
     "test": "turbo run test",
     "lint": "turbo run lint",
+    "typecheck": "turbo run build",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "clean": "turbo run clean && rm -rf node_modules",
     "contracts:build": "cd contracts && cargo build --target wasm32-unknown-unknown --release",
     "contracts:test": "cd contracts && cargo test",
+    "contracts:fmt": "cd contracts && cargo fmt --check",
+    "contracts:clippy": "cd contracts && cargo clippy -- -D warnings",
+    "indexer:check": "cd services/indexer && cargo check",
     "audit:security": "node tools/security-audit.js",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test",
     "prepare": "husky"
   },
   "devDependencies": {

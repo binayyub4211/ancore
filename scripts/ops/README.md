@@ -9,11 +9,13 @@ Automation scripts for operational tasks including key rotation, validation, and
 Validates key rotation procedures and performs automated checks to ensure rotation was successful and services are healthy.
 
 **Usage:**
+
 ```bash
 ./key-rotation-validator.sh --type <rotation-type> --phase <phase>
 ```
 
 **Rotation Types:**
+
 - `relayer-signing-key` - Relayer Ed25519 signing keypair
 - `api-token` - API authentication tokens
 - `database-credentials` - PostgreSQL credentials
@@ -21,11 +23,13 @@ Validates key rotation procedures and performs automated checks to ensure rotati
 - `encryption-key` - AES-256-GCM encryption keys
 
 **Phases:**
+
 - `pre-rotation` - Pre-flight checks before rotation
 - `post-rotation` - Validation after rotation complete
 - `rollback-check` - Verify rollback capability
 
 **Examples:**
+
 ```bash
 # Pre-rotation checks for signing key
 ./key-rotation-validator.sh --type relayer-signing-key --phase pre-rotation
@@ -38,6 +42,7 @@ Validates key rotation procedures and performs automated checks to ensure rotati
 ```
 
 **Environment Variables:**
+
 - `NAMESPACE` - Kubernetes namespace (default: ancore)
 - `GRAFANA_URL` - Grafana dashboard URL for metrics
 - `ALERT_WEBHOOK` - Slack webhook for notifications
@@ -50,11 +55,13 @@ Validates key rotation procedures and performs automated checks to ensure rotati
 Tests key rotation procedures in a safe staging environment.
 
 **Usage:**
+
 ```bash
 ./test-key-rotation.sh [rotation-type]
 ```
 
 **Test Types:**
+
 - `all` - Run all rotation tests (default)
 - `relayer-signing-key` - Test relayer signing key rotation
 - `api-token` - Test API token rotation
@@ -63,6 +70,7 @@ Tests key rotation procedures in a safe staging environment.
 - `runbook` - Test runbook completeness
 
 **Examples:**
+
 ```bash
 # Run all tests
 ./test-key-rotation.sh all
@@ -78,6 +86,7 @@ SKIP_CLEANUP=true ./test-key-rotation.sh all
 ```
 
 **Environment Variables:**
+
 - `TEST_NAMESPACE` - Kubernetes namespace for testing (default: ancore-staging)
 - `SKIP_CLEANUP` - Set to 'true' to skip cleanup after tests
 
@@ -104,7 +113,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Run key rotation tests
         run: |
           ./scripts/ops/test-key-rotation.sh all
@@ -122,14 +131,14 @@ name: Monthly Rotation Drill
 
 on:
   schedule:
-    - cron: '0 10 1 * *'  # First day of month at 10:00 UTC
+    - cron: '0 10 1 * *' # First day of month at 10:00 UTC
 
 jobs:
   drill:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Run rotation drill
         run: |
           ./scripts/ops/test-key-rotation.sh all
@@ -154,9 +163,11 @@ The validation script can export metrics for monitoring:
 ### Alerting
 
 Alert rules for key rotation are defined in:
+
 - `docs/ops/alerts/key-rotation.yml`
 
 Load alerts into Prometheus:
+
 ```bash
 promtool check rules docs/ops/alerts/key-rotation.yml
 kubectl apply -f docs/ops/alerts/key-rotation.yml
@@ -169,6 +180,7 @@ kubectl apply -f docs/ops/alerts/key-rotation.yml
 ### Common Issues
 
 **Issue: "Cannot access Kubernetes namespace"**
+
 ```bash
 # Verify kubectl configuration
 kubectl config current-context
@@ -179,6 +191,7 @@ kubectl config use-context <your-context>
 ```
 
 **Issue: "Missing required tools"**
+
 ```bash
 # Install required tools
 brew install kubectl jq curl  # macOS
@@ -186,12 +199,14 @@ apt-get install kubectl jq curl  # Ubuntu/Debian
 ```
 
 **Issue: "Validation script fails with permission denied"**
+
 ```bash
 # Make script executable
 chmod +x scripts/ops/key-rotation-validator.sh
 ```
 
 **Issue: "Test namespace already exists with resources"**
+
 ```bash
 # Clean up test namespace
 kubectl delete namespace ancore-staging
@@ -208,12 +223,13 @@ SKIP_CLEANUP=false ./test-key-rotation.sh all
 To add a new validation check to `key-rotation-validator.sh`:
 
 1. Add a new function following the naming pattern:
+
 ```bash
 validate_new_check() {
   log "Validating new check..."
-  
+
   # Your validation logic here
-  
+
   if [[ condition ]]; then
     success "New check passed"
   else
@@ -224,6 +240,7 @@ validate_new_check() {
 ```
 
 2. Call the function in the appropriate validation phase:
+
 ```bash
 post_rotation_validation() {
   # ... existing checks ...
@@ -238,10 +255,11 @@ post_rotation_validation() {
 To add a new test case to `test-key-rotation.sh`:
 
 1. Create a new test function:
+
 ```bash
 test_new_feature() {
   section "Testing New Feature"
-  
+
   log "Test 1: Description"
   if [[ test_condition ]]; then
     success "Test passed"
@@ -252,6 +270,7 @@ test_new_feature() {
 ```
 
 2. Add to the main test suite:
+
 ```bash
 main() {
   # ... existing tests ...
@@ -298,6 +317,7 @@ main() {
 ## Support
 
 For issues or questions:
+
 - **Security concerns:** security@ancore.io
 - **Operational issues:** ops@ancore.io
 - **On-call support:** PagerDuty primary-oncall

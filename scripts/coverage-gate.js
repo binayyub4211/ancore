@@ -2,10 +2,10 @@
 
 /**
  * Coverage Gate Checker
- * 
+ *
  * Validates that test coverage for critical security modules meets defined thresholds.
  * Generates CI-friendly reports and highlights modules below threshold.
- * 
+ *
  * Usage:
  *   node scripts/coverage-gate.js [--threshold PERCENT] [--report]
  */
@@ -15,45 +15,37 @@ const path = require('path');
 
 const CRITICAL_MODULES = {
   'core-sdk': {
-    paths: [
-      'packages/core-sdk/coverage/coverage-final.json',
-    ],
+    paths: ['packages/core-sdk/coverage/coverage-final.json'],
     gates: {
       'execute-with-session-key.ts': { branches: 95, functions: 95, lines: 95, statements: 95 },
-      'session': { branches: 90, functions: 95, lines: 90, statements: 90 },
-      'wallet': { branches: 85, functions: 90, lines: 85, statements: 85 },
-      'global': { branches: 75, functions: 90, lines: 85, statements: 85 },
+      session: { branches: 90, functions: 95, lines: 90, statements: 90 },
+      wallet: { branches: 85, functions: 90, lines: 85, statements: 85 },
+      global: { branches: 75, functions: 90, lines: 85, statements: 85 },
     },
   },
   'account-abstraction': {
-    paths: [
-      'packages/account-abstraction/coverage/coverage-final.json',
-    ],
+    paths: ['packages/account-abstraction/coverage/coverage-final.json'],
     gates: {
       'execute.ts': { branches: 95, functions: 95, lines: 95, statements: 95 },
-      'auth': { branches: 90, functions: 95, lines: 90, statements: 90 },
-      'lock': { branches: 90, functions: 95, lines: 90, statements: 90 },
-      'global': { branches: 75, functions: 90, lines: 85, statements: 85 },
+      auth: { branches: 90, functions: 95, lines: 90, statements: 90 },
+      lock: { branches: 90, functions: 95, lines: 90, statements: 90 },
+      global: { branches: 75, functions: 90, lines: 85, statements: 85 },
     },
   },
-  'crypto': {
-    paths: [
-      'packages/crypto/coverage/coverage-final.json',
-    ],
+  crypto: {
+    paths: ['packages/crypto/coverage/coverage-final.json'],
     gates: {
       'keys.ts': { branches: 95, functions: 95, lines: 95, statements: 95 },
-      'signing': { branches: 95, functions: 95, lines: 95, statements: 95 },
-      'encryption': { branches: 90, functions: 95, lines: 90, statements: 90 },
-      'global': { branches: 85, functions: 90, lines: 88, statements: 88 },
+      signing: { branches: 95, functions: 95, lines: 95, statements: 95 },
+      encryption: { branches: 90, functions: 95, lines: 90, statements: 90 },
+      global: { branches: 85, functions: 90, lines: 88, statements: 88 },
     },
   },
-  'stellar': {
-    paths: [
-      'packages/stellar/coverage/coverage-final.json',
-    ],
+  stellar: {
+    paths: ['packages/stellar/coverage/coverage-final.json'],
     gates: {
-      'client': { branches: 85, functions: 90, lines: 85, statements: 85 },
-      'global': { branches: 60, functions: 75, lines: 70, statements: 70 },
+      client: { branches: 85, functions: 90, lines: 85, statements: 85 },
+      global: { branches: 60, functions: 75, lines: 70, statements: 70 },
     },
   },
 };
@@ -109,25 +101,25 @@ class CoverageGateChecker {
       if (fileCoverage.s) {
         const statements = Object.values(fileCoverage.s);
         totalStatements += statements.length;
-        coveredStatements += statements.filter(s => s > 0).length;
+        coveredStatements += statements.filter((s) => s > 0).length;
       }
 
       if (fileCoverage.b) {
         const branches = Object.values(fileCoverage.b).flat();
         totalBranches += branches.length;
-        coveredBranches += branches.filter(b => b > 0).length;
+        coveredBranches += branches.filter((b) => b > 0).length;
       }
 
       if (fileCoverage.f) {
         const functions = Object.values(fileCoverage.f);
         totalFunctions += functions.length;
-        coveredFunctions += functions.filter(f => f > 0).length;
+        coveredFunctions += functions.filter((f) => f > 0).length;
       }
 
       if (fileCoverage.l) {
         const lines = Object.values(fileCoverage.l);
         totalLines += lines.length;
-        coveredLines += lines.filter(l => l > 0).length;
+        coveredLines += lines.filter((l) => l > 0).length;
       }
     });
 
@@ -189,11 +181,13 @@ class CoverageGateChecker {
         const globalFailures = this.checkThreshold(globalCoverage, globalThreshold, 'global');
 
         const status = globalFailures.length === 0 ? '✅' : '❌';
-        console.log(`${status} Global: B${globalCoverage.branches}% F${globalCoverage.functions}% L${globalCoverage.lines}% S${globalCoverage.statements}%`);
+        console.log(
+          `${status} Global: B${globalCoverage.branches}% F${globalCoverage.functions}% L${globalCoverage.lines}% S${globalCoverage.statements}%`
+        );
 
         if (globalFailures.length > 0) {
           this.results[moduleName].passed = false;
-          globalFailures.forEach(f => {
+          globalFailures.forEach((f) => {
             console.log(`   └─ ${f.metric}: ${f.actual}% (need ${f.required}%, ${f.delta}% short)`);
             this.failures.push(`${moduleName} global ${f.metric}: ${f.actual}% < ${f.required}%`);
           });
@@ -213,13 +207,17 @@ class CoverageGateChecker {
         const failures = this.checkThreshold(coverage, threshold, pathName);
         const status = failures.length === 0 ? '✅' : '❌';
 
-        console.log(`${status} ${pathName}: B${coverage.branches}% F${coverage.functions}% L${coverage.lines}% S${coverage.statements}%`);
+        console.log(
+          `${status} ${pathName}: B${coverage.branches}% F${coverage.functions}% L${coverage.lines}% S${coverage.statements}%`
+        );
 
         if (failures.length > 0) {
           this.results[moduleName].passed = false;
-          failures.forEach(f => {
+          failures.forEach((f) => {
             console.log(`   └─ ${f.metric}: ${f.actual}% (need ${f.required}%, ${f.delta}% short)`);
-            this.failures.push(`${moduleName}/${pathName} ${f.metric}: ${f.actual}% < ${f.required}%`);
+            this.failures.push(
+              `${moduleName}/${pathName} ${f.metric}: ${f.actual}% < ${f.required}%`
+            );
           });
         }
       });
@@ -238,13 +236,13 @@ class CoverageGateChecker {
 
     if (this.warnings.length > 0) {
       console.log('⚠️  Warnings:');
-      this.warnings.forEach(w => console.log(`   - ${w}`));
+      this.warnings.forEach((w) => console.log(`   - ${w}`));
       console.log();
     }
 
     if (this.failures.length > 0) {
       console.log(`❌ ${this.failures.length} Coverage Gate(s) Failed:`);
-      this.failures.forEach(f => console.log(`   - ${f}`));
+      this.failures.forEach((f) => console.log(`   - ${f}`));
       console.log();
       process.exit(1);
     } else {

@@ -121,7 +121,7 @@ The contract uses structured error codes to provide clear feedback for failure c
 | 6          | `SessionKeyExpired`      | Session key has expired                |
 | 7          | `InsufficientPermission` | Insufficient permissions               |
 | 8          | `InvalidVersion`         | Invalid version provided for migration |
-| 9          | `InvalidSignature`       | Invalid signature provided            |
+| 9          | `InvalidSignature`       | Invalid signature provided             |
 
 ### Error Handling Examples
 

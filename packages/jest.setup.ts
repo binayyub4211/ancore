@@ -16,7 +16,10 @@ if (typeof globalThis.TextEncoder === 'undefined') {
   Object.assign(globalThis, { TextEncoder, TextDecoder });
 }
 
-if (typeof globalThis.crypto === 'undefined' || typeof (globalThis.crypto as Crypto).subtle === 'undefined') {
+if (
+  typeof globalThis.crypto === 'undefined' ||
+  typeof (globalThis.crypto as Crypto).subtle === 'undefined'
+) {
   Object.defineProperty(globalThis, 'crypto', {
     value: webcrypto,
     configurable: true,

@@ -25,9 +25,9 @@ The package provides canonical typed event decoders to ensure consistent event p
 #### Decoding Contract Events
 
 ```typescript
-import { 
+import {
   decodeAccountContractEvent,
-  type DecodedAccountContractEventEnvelope 
+  type DecodedAccountContractEventEnvelope
 } from '@ancore/account-abstraction';
 import { xdr } from '@stellar/stellar-sdk';
 
@@ -38,7 +38,7 @@ const decoded = decodeAccountContractEvent(contractEvent);
 
 if (decoded) {
   console.log('Contract ID:', decoded.contractId);
-  
+
   switch (decoded.event.type) {
     case 'initialized':
       console.log('Owner:', decoded.event.owner);
@@ -79,12 +79,12 @@ Event topic constants are available for filtering:
 ```typescript
 import { ACCOUNT_CONTRACT_EVENT_TOPICS } from '@ancore/account-abstraction';
 
-console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.initialized);        // 'initialized'
-console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.executed);           // 'executed'
-console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.sessionKeyAdded);    // 'session_key_added'
-console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.sessionKeyRevoked);  // 'session_key_revoked'
-console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.upgraded);           // 'upgraded'
-console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.migrated);           // 'migrated'
+console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.initialized); // 'initialized'
+console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.executed); // 'executed'
+console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.sessionKeyAdded); // 'session_key_added'
+console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.sessionKeyRevoked); // 'session_key_revoked'
+console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.upgraded); // 'upgraded'
+console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.migrated); // 'migrated'
 console.log(ACCOUNT_CONTRACT_EVENT_TOPICS.sessionKeyTtlRefreshed); // 'session_key_ttl_refreshed'
 ```
 
@@ -108,7 +108,9 @@ await accountContract.initialize(owner.publicKey());
 const result = await accountContract.execute({
   to: 'CBBBBBB...',
   functionName: 'transfer',
-  args: [/* ... */],
+  args: [
+    /* ... */
+  ],
   expectedNonce: 0,
 });
 
@@ -123,18 +125,18 @@ await accountContract.addSessionKey({
 ### Error Handling
 
 ```typescript
-import { 
+import {
   AccountContractError,
   UnauthorizedError,
   InvalidNonceError,
-  mapContractError 
+  mapContractError,
 } from '@ancore/account-abstraction';
 
 try {
   await accountContract.execute(/* ... */);
 } catch (error) {
   const contractError = mapContractError(error);
-  
+
   if (contractError instanceof UnauthorizedError) {
     console.error('Not authorized to perform this action');
   } else if (contractError instanceof InvalidNonceError) {
@@ -163,9 +165,9 @@ Emitted when a transaction is executed through the account.
 ```typescript
 interface AccountContractExecutedEvent {
   type: 'executed';
-  to: string;           // Target contract address (C...)
+  to: string; // Target contract address (C...)
   functionName: string; // Function name being called
-  nonce: number;        // Nonce used (pre-increment value)
+  nonce: number; // Nonce used (pre-increment value)
 }
 ```
 
@@ -230,16 +232,19 @@ interface AccountContractSessionKeyTtlRefreshedEvent {
 ## Benefits
 
 ### Consistency
+
 - Single source of truth for event schemas
 - Type-safe event parsing across all surfaces
 - Prevents schema drift between frontend and backend
 
 ### Reliability
+
 - Comprehensive test coverage
 - Validated against contract event emissions
 - Handles edge cases (malformed data, missing fields)
 
 ### Developer Experience
+
 - Full TypeScript support with discriminated unions
 - Clear error messages for invalid data
 - IDE autocomplete for event types and fields
@@ -255,10 +260,10 @@ async function watchAccountEvents(contractId: string) {
   const events = await stellar.getEvents({
     contractIds: [contractId],
   });
-  
+
   for (const event of events) {
     const decoded = decodeAccountContractEvent(event.contractEvent);
-    
+
     if (decoded?.event.type === 'executed') {
       updateTransactionHistory({
         to: decoded.event.to,
@@ -279,7 +284,7 @@ async function indexContractEvents(ledger: Ledger) {
   for (const tx of ledger.transactions) {
     for (const event of tx.events) {
       const decoded = decodeAccountContractEvent(event);
-      
+
       if (decoded) {
         await db.events.insert({
           contractId: decoded.contractId,
@@ -300,7 +305,7 @@ import { decodeAccountContractEvent } from '@ancore/account-abstraction';
 
 function processEventNotification(event: xdr.ContractEvent) {
   const decoded = decodeAccountContractEvent(event);
-  
+
   if (decoded?.event.type === 'session_key_added') {
     showNotification({
       title: 'Session Key Added',

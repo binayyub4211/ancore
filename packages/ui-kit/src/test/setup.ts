@@ -1,5 +1,7 @@
-/**
- * ui-kit test setup.
- * Delegates to the shared Vitest setup (jest-dom, cleanup, localStorage shim).
- */
-export * from '../../../packages/vitest.setup';
+import '@testing-library/jest-dom';
+import { afterEach } from 'vitest';
+import { cleanup } from '@testing-library/react';
+
+afterEach(() => {
+  cleanup();
+});
