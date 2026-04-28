@@ -24,5 +24,7 @@
     "service_worker": "background/service-worker.js",
     "type": "module"
   },
-  "permissions": ["storage", "activeTab"]
+  "permissions": [
+    "storage"
+  ]
 }
