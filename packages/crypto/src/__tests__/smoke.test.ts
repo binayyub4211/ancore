@@ -16,6 +16,7 @@ const EXPECTED_EXPORTS = [
   'generateMnemonic',
   'validateMnemonic',
   'deriveKeypairFromMnemonic',
+  'randomBytes',
 ] as const;
 
 describe('@ancore/crypto smoke test', () => {
