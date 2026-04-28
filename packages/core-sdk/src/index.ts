@@ -32,6 +32,9 @@ export {
   type PaymentSigner,
 } from './send-payment';
 
+// Payment Request
+export { parsePaymentRequest, type PaymentRequest } from './payment-request';
+
 // Account transaction builder (wrapper around Stellar SDK's TransactionBuilder)
 export {
   AccountTransactionBuilder,
@@ -57,6 +60,7 @@ export {
   SimulationExpiredError,
   SimulationFailedError,
   TransactionSubmissionError,
+  PaymentRequestValidationError,
 } from './errors';
 
 export {
