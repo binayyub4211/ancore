@@ -16,6 +16,7 @@ vi.mock('@ancore/ui-kit', () => ({
       {children}
     </button>
   ),
+  EmptyState: ({ title }: any) => <div>{title}</div>,
 }));
 
 vi.mock('lucide-react', () => ({

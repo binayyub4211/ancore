@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Badge, Button } from '@ancore/ui-kit';
+import { Card, CardContent, CardHeader, CardTitle, Badge, Button, EmptyState } from '@ancore/ui-kit';
 import { Download } from 'lucide-react';
 import type { Transaction } from '../types/dashboard';
 
@@ -56,7 +56,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({ transactions, 
       </CardHeader>
       <CardContent className="space-y-2">
         {visible.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No transactions found.</p>
+          <EmptyState title="No transactions found." />
         ) : (
           visible.map((tx) => (
             <div
