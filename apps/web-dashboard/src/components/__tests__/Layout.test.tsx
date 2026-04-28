@@ -30,6 +30,14 @@ describe('Layout', () => {
     expect(screen.getByText('Ancore')).toBeInTheDocument();
   });
 
+  it('should render the quick action bar', () => {
+    renderWithProviders(<Layout />);
+
+    expect(screen.getByLabelText('Send')).toBeInTheDocument();
+    expect(screen.getByLabelText('Request')).toBeInTheDocument();
+    expect(screen.getByLabelText('Scan')).toBeInTheDocument();
+  });
+
   it('should render density toggle button', () => {
     renderWithProviders(<Layout />);
 
